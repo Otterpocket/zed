@@ -230,18 +230,24 @@ impl PickerDelegate for RecentProjectsDelegate {
             &self.workspace_locations[r#match.candidate_id],
         );
 
-        Some(
-            ListItem::new(ix)
-                .inset(true)
-                .spacing(ListItemSpacing::Sparse)
-                .selected(selected)
-                .child(
-                    v_flex()
-                        .child(highlighted_location.names)
-                        .when(self.render_paths, |this| {
-                            this.children(highlighted_location.paths)
-                        }),
-                ),
-        )
+        let list_item = ListItem::new(ix)
+            .inset(true)
+            .spacing(ListItemSpacing::Sparse)
+            .selected(selected)
+            .child(
+                v_flex()
+                    .child(highlighted_location.names.into_element())
+                    .child(
+                        v_flex()
+                            .children(
+                                highlighted_location
+                                    .paths
+                                    .into_iter()
+                                    .map(|path| path.into_element())
+                            )
+                    )
+            );
+
+        Some(list_item)
     }
 }
